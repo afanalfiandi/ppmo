@@ -30,7 +30,7 @@ import addLanjutan from "./function/addLanjutan";
 import { SafeAreaView } from "react-native";
 import pushNotification from "./function/pushNotification";
 import pushScheduled from "./function/pushScheduled";
-
+import PushNotification from "react-native-push-notification";
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 const COLORS = { primary: "#1E319D", white: "#FFFFFF", abu1: "#F6F6F6" };
@@ -40,6 +40,7 @@ const red = "#C74B4C";
 const grey = "#5C5F68";
 const blue_icon = "#9695C0";
 const AlarmScreen = () => {
+
   const navigation = useNavigation();
   const dataHari = [
     {
@@ -182,31 +183,12 @@ const AlarmScreen = () => {
 
           const dateNow = moment(new Date()).format("YYYY-MM-DD");
 
-          console.log(end);
           if (newDate == end) {
             setModalMetu(true);
           } else if (dateNow == start) {
             setModalMetu(false);
           }
-          // if (resp.start) {
-          // }
-          // const startDate = resp.start;
-          // const endDate = resp.end;
-          // const dateNow = moment(new Date()).format("2024-01-01");
-          // // const dateNow = moment(new Date()).format("YYYY-MM-DD");
-          // const selisih = moment(dateNow).isAfter(endDate, "day");
-          // console.warn(selisih);
-          // if (selisihSession == null) {
-          //   if (selisih == true) {
-          //     setSelisih(true);
-          //     setModalMetu(true);
-          //     AsyncStorage.setItem("selisihSession", "1");
-          //   }
-          // } else {
-          //   setSelisih(false);
-          // }
         }
-        // console.log("selisihSession : " + selisihSession);
       });
   };
 
@@ -380,6 +362,8 @@ const AlarmScreen = () => {
         setToday(resp);
       });
   };
+
+
   useEffect(() => {
     if (lastNotificationResponse) {
       const route = JSON.stringify(
@@ -575,8 +559,8 @@ const AlarmScreen = () => {
           animationInTiming={2000}
           animationIn={"fadeIn"}
           animationOut={"fadeOut"}
-          // deviceHeight={height}
-          // deviceWidth={width}
+        // deviceHeight={height}
+        // deviceWidth={width}
         >
           <View
             style={{

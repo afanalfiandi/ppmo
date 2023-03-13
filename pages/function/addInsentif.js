@@ -1,10 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { ToastAndroid } from "react-native";
-import pushNotification from "./pushNotification";
+// import pushNotification from "./pushNotification";
 import * as Notifications from "expo-notifications";
 import getAlarm from "./getAlarm";
-
+import pushNotification from "../alarm/pushNotification";
 const addInsentif = async (hours, minutes, lamaPengobatan, hari, jam, fase) => {
   const userData = JSON.parse(await AsyncStorage.getItem("userData"));
 
@@ -35,7 +35,8 @@ const addInsentif = async (hours, minutes, lamaPengobatan, hari, jam, fase) => {
     .then((res) => res.json())
     .then(async (resp) => {
       if (resp == "1") {
-        pushNotification(fase, hrs, min);
+        // pushNotification(hrs, min);
+        pushNotification(lamaPengobatan, jam);
         AsyncStorage.setItem("alarmSession", "1");
         try {
           await AsyncStorage.removeItem("selisihSession");

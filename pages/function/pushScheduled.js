@@ -5,14 +5,21 @@ const pushScheduled = async (hrs, min, day) => {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
-      shouldPlaySound: false,
+      shouldPlaySound: true,
       shouldSetBadge: false,
     }),
   });
+
+  await Notifications.getPermissionsAsync();
+  let a = existingStatus;
+  console.log(a);
+  // const { status: existingStatus } = await Permissions.getAsync(Permissions.Notifications)
   await Notifications.setNotificationChannelAsync("Minum Obat", {
     name: "Notifikasi Pengingat Minum Obat",
     importance: Notifications.AndroidImportance.HIGH,
-    sound: "sound.wav",
+    sound: true,
+    enableVibrate: true,
+    vibrationPattern: [0, 250, 250, 250],
   });
   await Notifications.scheduleNotificationAsync({
     content: {
@@ -20,7 +27,7 @@ const pushScheduled = async (hrs, min, day) => {
       body: "Lakukan Konfirmasi dengan menekan notifikasi ini",
       data: { path: "Konfirmasi" },
       shouldPlaySound: true,
-      sound: "default",
+      sound: "sound.wav",
     },
     trigger: {
       weekday: day,

@@ -1,16 +1,11 @@
 {
   "expo": {
-    "name": "apk-ppmotbc",
+    "name": "PPMO TBC",
     "slug": "apk-ppmotbc",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon/app.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -34,9 +29,10 @@
       [
         "expo-notifications",
         {
-          "sounds": [
-            "./assets/sound/sound.wav"
-          ]
+          "icon": "./assets/icon.png",
+          "color": "#ffffff",
+          "sounds": ["./mysound.wav"],
+          "mode": "production"
         }
       ]
     ],

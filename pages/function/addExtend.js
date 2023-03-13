@@ -3,6 +3,7 @@ import moment from "moment";
 import { ToastAndroid } from "react-native";
 import pushScheduled from "./pushScheduled";
 import getAlarm from "./getAlarm";
+import pushSchedule from "../alarm/pushSchedule";
 const addExtend = async (
   hours,
   minutes,
@@ -10,7 +11,8 @@ const addExtend = async (
   hari,
   jam,
   fase,
-  hariAlarm
+  hariAlarm,
+  s, d, t,
 ) => {
   const userData = JSON.parse(await AsyncStorage.getItem("userData"));
 
@@ -50,9 +52,10 @@ const addExtend = async (
     .then((res) => res.json())
     .then(async (resp) => {
       if (resp == 1) {
-        hariAlarm.map((d) => {
-          pushScheduled(hrs, min, d);
-        });
+        pushSchedule(s, d, t, lamaPengobatan, jam, fase);
+        // hariAlarm.map((d) => {
+        //   pushScheduled(hrs, min, d);
+        // });
         AsyncStorage.setItem("alarmSession", "1");
 
         try {

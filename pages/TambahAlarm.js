@@ -24,11 +24,14 @@ import moment, { min } from "moment";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Modal from "react-native-modal";
 import { AntDesign } from "@expo/vector-icons";
+import PushNotification from "react-native-push-notification";
 
 import getAlarm from "./function/getAlarm";
 import addInsentif from "./function/addInsentif";
 import addExtend from "./function/addExtend";
 import addLanjutan from "./function/addLanjutan";
+import pushSchedule from "./alarm/pushSchedule";
+import pushNotification from "./alarm/pushNotification";
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 const COLORS = {
@@ -333,22 +336,22 @@ const TambahAlarm = () => {
 
   const onChangeMenit = (m) => {
     if (m <= 59) {
-      const fristChar = m.slice(0, 1);
-      const scndChar = m.slice(1, 2);
+      // const fristChar = m.slice(0, 1);
+      // const scndChar = m.slice(1, 2);
 
-      if (m == "00") {
-        setMinutes("00");
-      } else if (fristChar == 0) {
-        setMinutes(scndChar);
-        jamArr.push(hours + ":0" + scndChar);
+      // if (m == "00") {
+      //   setMinutes("00");
+      // } else if (fristChar == "0") {
+      //   setMinutes(scndChar);
+      //   jamArr.push(hours + ":0" + scndChar);
 
-        setJam(jamArr[0]);
-      } else {
-        setMinutes(m);
-        jamArr.push(hours + ":" + m);
+      //   setJam(jamArr[0]);
+      // } else {
+      //   setMinutes(m);
+      jamArr.push(hours + ":" + m);
 
-        setJam(jamArr[0]);
-      }
+      setJam(jamArr[0]);
+      // }
     } else {
       ToastAndroid.show("Menit tidak boleh melebihi 59!", ToastAndroid.SHORT);
     }
@@ -399,8 +402,8 @@ const TambahAlarm = () => {
         onBackdropPress={() => setFaseKaton(false)}
         animationIn="fadeIn"
         animationOut="fadeOut"
-        // animationOutTiming={1500}
-        // animationInTiming={1500}
+      // animationOutTiming={1500}
+      // animationInTiming={1500}
       >
         <View style={{ alignItems: "center", flex: 0.3 }}>
           <View
@@ -448,8 +451,8 @@ const TambahAlarm = () => {
         onBackdropPress={() => setHourVisible(false)}
         animationIn="fadeIn"
         animationOut="fadeOut"
-        // animationOutTiming={1500}
-        // animationInTiming={1500}
+      // animationOutTiming={1500}
+      // animationInTiming={1500}
       >
         <View>
           <Text
@@ -734,10 +737,10 @@ const TambahAlarm = () => {
           style={pressedSatu ? styles.boxhari_blue : styles.boxhari_grey}
           onPress={() => {
             if (hariAlarm.length < 3) {
-              pilihHari(1);
+              pilihHari(0);
               setPressedSatu(true);
             } else {
-              pilihHari(1);
+              pilihHari(0);
             }
           }}
           disabled={pressedSatu ? true : false}
@@ -755,10 +758,10 @@ const TambahAlarm = () => {
           style={pressedDua ? styles.boxhari_blue : styles.boxhari_grey}
           onPress={() => {
             if (hariAlarm.length < 3) {
-              pilihHari(2);
+              pilihHari(1);
               setPressedDua(true);
             } else {
-              pilihHari(2);
+              pilihHari(1);
             }
           }}
           disabled={pressedDua ? true : false}
@@ -776,10 +779,10 @@ const TambahAlarm = () => {
           style={pressedTiga ? styles.boxhari_blue : styles.boxhari_grey}
           onPress={() => {
             if (hariAlarm.length < 3) {
-              pilihHari(3);
+              pilihHari(2);
               setPressedTiga(true);
             } else {
-              pilihHari(3);
+              pilihHari(2);
             }
           }}
           disabled={pressedTiga ? true : false}
@@ -797,10 +800,10 @@ const TambahAlarm = () => {
           style={pressedEmpat ? styles.boxhari_blue : styles.boxhari_grey}
           onPress={() => {
             if (hariAlarm.length < 3) {
-              pilihHari(4);
+              pilihHari(3);
               setPressedEmpat(true);
             } else {
-              pilihHari(4);
+              pilihHari(3);
             }
           }}
           disabled={pressedEmpat ? true : false}
@@ -818,10 +821,10 @@ const TambahAlarm = () => {
           style={pressedLima ? styles.boxhari_blue : styles.boxhari_grey}
           onPress={() => {
             if (hariAlarm.length < 3) {
-              pilihHari(5);
+              pilihHari(4);
               setPressedLima(true);
             } else {
-              pilihHari(5);
+              pilihHari(4);
             }
           }}
           disabled={pressedLima ? true : false}
@@ -839,10 +842,10 @@ const TambahAlarm = () => {
           style={pressedEnam ? styles.boxhari_blue : styles.boxhari_grey}
           onPress={() => {
             if (hariAlarm.length < 3) {
-              pilihHari(6);
+              pilihHari(5);
               setPressedEnam(true);
             } else {
-              pilihHari(6);
+              pilihHari(5);
             }
           }}
           disabled={pressedEnam ? true : false}
@@ -860,10 +863,10 @@ const TambahAlarm = () => {
           style={pressedTujuh ? styles.boxhari_blue : styles.boxhari_grey}
           onPress={() => {
             if (hariAlarm.length < 3) {
-              pilihHari(7);
+              pilihHari(6);
               setPressedTujuh(true);
             } else {
-              pilihHari(7);
+              pilihHari(6);
             }
           }}
           disabled={pressedTujuh ? true : false}
@@ -886,11 +889,13 @@ const TambahAlarm = () => {
       <TouchableOpacity
         style={styles.submitBtn}
         onPress={() => {
-          setLoadingAdd(true);
+          setLoading(true);
           setTimeout(() => {
-            // jika hari alarm berjumlah 3 dan fase bukan insentif (1)
+            const satu = hariAlarm[0];
+            const dua = hariAlarm[1];
+            const tiga = hariAlarm[2];
+
             if (hariAlarm.length == 3 && fase != 1) {
-              // fase lanjutan
               if (fase == 2) {
                 addLanjutan(
                   hours,
@@ -899,9 +904,9 @@ const TambahAlarm = () => {
                   hari,
                   jam,
                   fase,
-                  hariAlarm
+                  hariAlarm,
+                  satu, dua, tiga,
                 );
-                // fase extend
               } else if (fase == 3) {
                 addExtend(
                   hours,
@@ -910,63 +915,72 @@ const TambahAlarm = () => {
                   hari,
                   jam,
                   fase,
-                  hariAlarm
+                  hariAlarm,
+                  satu, dua, tiga
                 );
               }
-            }
-
-            // jika fase insentif (1)
-            else if (fase == 1) {
-              // fase insentif
-              addInsentif(hours, minutes, lamaPengobatan, hari, jam, fase);
-            }
-            // jika blm pilih hari dan fase bukan insentif
-            else if (hariAlarm.length <= 0 && fase != 1) {
-              // peringatan blm pilih hari
-              ToastAndroid.show("Anda belum memilih hari!", ToastAndroid.SHORT);
-            } else if (hariAlarm.length < 3 && fase != 1) {
-              // peringatan hari 3 kali
+            } else if (hariAlarm < 3 && fase != 1) {
               ToastAndroid.show(
                 "Pilih hari sebanyak 3 hari!",
                 ToastAndroid.SHORT
               );
+            } else if (hariAlarm.length == 0 && fase == 1) {
+              addInsentif(hours, minutes, lamaPengobatan, hari, jam, fase);
+            } else if (hariAlarm.length == 0) {
+              ToastAndroid.show("Anda belum memilih hari!", ToastAndroid.SHORT);
             }
-            // if (hariAlarm.length == 3) {
-            //   if (fase == "1") {
-            //     addInsentif(hours, minutes, lamaPengobatan, hari, jam, fase);
-            //   } else if (fase == "2") {
-            //     addLanjutan(
-            //       hours,
-            //       minutes,
-            //       lamaPengobatan,
-            //       hari,
-            //       jam,
-            //       fase,
-            //       hariAlarm
-            //     );
-            //   } else {
-            //     addExtend(
-            //       hours,
-            //       minutes,
-            //       lamaPengobatan,
-            //       hari,
-            //       jam,
-            //       fase,
-            //       hariAlarm
-            //     );
-            //   }
-            //   setLoadingAdd(false);
-            //   navigation.navigate("AlarmScreen");
-            // } else if (hariAlarm.length <= 0 && fase != 1) {
-            //   ToastAndroid.show(
-            //     "Anda belum memilih hari!",
-            //     ToastAndroid.SHORT
-            //   );
-            setLoadingAdd(false);
-
-            navigation.navigate("AlarmScreen");
-            // }
+            setLoading(false);
+            navigation.navigate('AlarmScreen');
           }, 3000);
+
+          // setLoadingAdd(true);
+          // setTimeout(() => {
+          //   // jika hari alarm berjumlah 3 dan fase bukan insentif (1)
+          //   if (hariAlarm.length == 3 && fase != 1) {
+          //     // fase lanjutan
+          //     if (fase == 2) {
+          //       addLanjutan(
+          //         hours,
+          //         minutes,
+          //         lamaPengobatan,
+          //         hari,
+          //         jam,
+          //         fase,
+          //         hariAlarm
+          //       );
+          //       // fase extend
+          //     } else if (fase == 3) {
+          //       addExtend(
+          //         hours,
+          //         minutes,
+          //         lamaPengobatan,
+          //         hari,
+          //         jam,
+          //         fase,
+          //         hariAlarm
+          //       );
+          //     }
+          //   }
+
+          //   // jika fase insentif (1)
+          //   else if (fase == 1) {
+          //     // fase insentif
+          //     addInsentif(hours, minutes, lamaPengobatan, hari, jam, fase);
+          //   }
+          //   // jika blm pilih hari dan fase bukan insentif
+          //   else if (hariAlarm.length <= 0 && fase != 1) {
+          //     // peringatan blm pilih hari
+          //     ToastAndroid.show("Anda belum memilih hari!", ToastAndroid.SHORT);
+          //   } else if (hariAlarm.length < 3 && fase != 1) {
+          //     // peringatan hari 3 kali
+          //     ToastAndroid.show(
+          //       "Pilih hari sebanyak 3 hari!",
+          //       ToastAndroid.SHORT
+          //     );
+          //   }
+          //   setLoadingAdd(false);
+          //   navigation.navigate("AlarmScreen");
+          // }, 3000);
         }}
       >
         <Text style={styles.btnText}>Simpan</Text>

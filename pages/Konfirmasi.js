@@ -186,7 +186,7 @@ const Konfirmasi = () => {
     getHari();
     getObat();
     setTimeout(() => {
-      setLoading(false);
+      setLoadingDua(false);
     }, 2000);
 
     const backAction = () => {

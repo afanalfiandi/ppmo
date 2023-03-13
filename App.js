@@ -35,7 +35,7 @@ import alarmdesain from "./pages/alarmdesain";
 import TestScreen from "./pages/alarmdesain";
 import TestScreen_2 from "./pages/alarmdesain_2";
 import TestScreen_3 from "./pages/alarmdesain_3";
-
+import Alarm from "./pages/Alarm";
 const COLORS = { primary: "#1E319D", white: "#FFFFFF" };
 
 const width = Dimensions.get("screen").width;
@@ -391,6 +391,42 @@ const App = () => {
                     }}
                   >
                     Akun
+                  </Text>
+                </View>
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Alarm"
+          component={Alarm}
+          options={{
+            title: "Akun",
+            tabBarIcon: ({ focused }) => {
+              return (
+                <View style={styles.buttonicon}>
+                  <Image
+                    source={
+                      focused
+                        ? require("./assets/icon/person_fill.png")
+                        : require("./assets/icon/person.png")
+                    }
+                    resizeMode="contain"
+                    style={{
+                      width: 25,
+                      height: 25,
+                      tintColor: focused ? "#FFFFFF" : "#B2B6C1",
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: focused ? "#FFFFFF" : "#B2B6C1",
+                      fontSize: 13,
+                      alignItems: "center",
+                      fontFamily: "Poppins-Regular",
+                    }}
+                  >
+                    Alarm
                   </Text>
                 </View>
               );

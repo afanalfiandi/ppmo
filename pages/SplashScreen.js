@@ -12,13 +12,28 @@ import {
 import React, { useRef, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import PushNotification from "react-native-push-notification";
 const COLORS = { primary: "#1E319D", white: "#FFFFFF" };
 const SplashScreen = () => {
   const navigation = useNavigation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const configNotification = async () => {
+    PushNotification.configure({
+      onNotification: function (notification) {
+        if (notification.userInteraction) {
+          navigation.navigate('Konfirmasi');
+          // Handle notification click
+        }
+      },
 
+
+      onAction: function (notification) {
+        console.log("asd");
+      },
+    });
+  }
   useEffect(() => {
+    configNotification();
     fadeIn();
     navig();
 
@@ -61,6 +76,7 @@ const SplashScreen = () => {
       } else {
         navigation.navigate("IntroScreen");
       }
+      // navigation.navigate("Alarm");
     }, 3000);
   };
 
